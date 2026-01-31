@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module register_file(   
     input logic clk,
     input logic reset,
@@ -7,15 +8,15 @@ module register_file(
     input logic [4:0] rd,
     input logic [31:0] wd,
     output logic [31:0] rd1,
-    output logic [31:0] rd2,
+    output logic [31:0] rd2
 );
     logic [31:0] r_out [31:0]; // Register Array
     logic [31:0] we;
 
     genvar k;
     generate 
-        for (k = 0, k < 32; k++) begin : GEN_REGS
-            assign we[k] = Register && (rd == k[4:0]) && (k != 0);
+        for (k = 0; k < 32; k++) begin : GEN_REGS
+            assign we[k] = RegWrite && (rd == k[4:0]) && (k != 0);
 
             register u_reg(
                 .clk(clk),
