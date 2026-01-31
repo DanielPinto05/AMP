@@ -1,14 +1,27 @@
-module ALU (
-    input clk, 
+module ALU ( 
     input a[31:0], 
     input b[31:0], 
-    input ALUctrl, // we'll extend this as we need more control signals. for now 0 is add. 
+    input ALUctrl[3:0], 
     output ALUout[31:0];  
 )
-
-    assign sum = a + b; 
-    assign difference = a-b; 
+    // * ALU Mapping
+    // 0 - Adding
+    // 1 - Subtracting
+    // 2 - Left Shift Logical Operation
+    // 3 - Right Shift Arithmetic
+    // 4 - Right Shift Logical
+    // 5 - 
     
-
+    always_comb begin
+        case(ALUOP)
+            0: ALUout = a + b;
+            1: ALUout = a - b;
+            2: ALUout = a << b[4:0];
+            3: ALUout = a >>> b[4:0];
+            4: ALUout = a >> b[4:0];
+            default: alu_out = 0;
+        endcase
+    end
+    
 
 endmodule
