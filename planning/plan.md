@@ -14,3 +14,6 @@ So what instructions do we need to implement?
 10. andi
 11. add
 12. sub
+
+# Testing 
+cocotb

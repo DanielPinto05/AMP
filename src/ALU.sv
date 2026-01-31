@@ -1,9 +1,11 @@
+`timescale 1ns/1ns
+
 module ALU ( 
     input logic [31:0] a, 
     input logic [31:0] b, 
     input logic [3:0] ALUctrl, 
-    output logic [31:0] ALUout;  
-)
+    output logic [31:0] ALUout  
+);
     // * ALU Mapping
     // 0 - ADD
     // 1 - SUB
@@ -27,7 +29,7 @@ module ALU (
             7: ALUout = ($signed(a) < $signed(b)) ? 1 : 0;
             8: ALUout = (a < b) ? 1 : 0;
             9: ALUout = a & b;
-            default: alu_out = 0;
+            default: ALUout = 0;
         endcase
     end
 
