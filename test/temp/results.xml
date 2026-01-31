@@ -1,6 +1,8 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1769889667" />
-    <testcase name="ram_test" classname="ram" file="/Users/DanielPinto/Desktop/Engineering_and_Professional/Build_Projects/AMP/test/temp/ram.py" lineno="6" time="0.0032770633697509766" sim_time_ns="21.1" ratio_time="6438.691480538378" />
+    <property name="random_seed" value="1769896231" />
+    <testcase name="Extend_test" classname="Extend" file="/Users/DanielPinto/Desktop/Engineering_and_Professional/Build_Projects/AMP/test/temp/Extend.py" lineno="8" time="0.0003409385681152344" sim_time_ns="0.0" ratio_time="0.0">
+      <failure error_type="TypeError" error_msg="unsupported format string passed to LogicArray.__format__" />
+    </testcase>
   </testsuite>
 </testsuites>
