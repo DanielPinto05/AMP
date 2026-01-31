@@ -1,6 +1,22 @@
 # Plan
 
-So what instructions do we need to implement?
+So what instructions do we need to implement? All in the RV32I
+
+
+add
+sub
+sll
+slt
+sltu
+xor
+srl
+sra
+or
+and
+
+
+
+
 
 1. lw
 2. sw

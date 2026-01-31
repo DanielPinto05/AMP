@@ -10,8 +10,13 @@ logic PCwrite;
 register pc(
     .clk(clk), 
     .reset(reset), 
-    .enable())
+    .enable(PCwrite), 
+    .)
 
+
+ram IMEM() // instruction memory - this is read only
+
+ram DMEM() // data memory
 
 
 endmodule
