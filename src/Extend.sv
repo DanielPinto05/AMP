@@ -16,7 +16,8 @@ parameter I=3'b000, S = 3'b001, B = 3'b010, U = 3'b011, J = 3'b100;
 
 always_comb begin
     case (ImmSrc)
-        I: ImmExt = {{20{instr[31]}}, instr[31:20]};
+        // I: ImmExt = {{20{instr[31]}}, instr[31:20]};
+        I: ImmExt = {instr[31:20], 20'b0}; 
         S: ImmExt = {{20{instr[31]}}, instr[31:25], instr[11:7]};
         B: ImmExt = {{19{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8], 1'b0};
         U: ImmExt = {{instr[31:12]}, 12'b0};
