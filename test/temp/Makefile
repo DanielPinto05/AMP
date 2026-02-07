@@ -1,7 +1,7 @@
 SIM ?= icarus
 COCOTB_TOPLEVEL ?= verilog
-VERILOG_SOURCES += $(PWD)/../../src/ram.sv
-COCOTB_TOPLEVEL = ram
-COCOTB_TEST_MODULES = ram
+VERILOG_SOURCES += $(PWD)/../../src/Extend.sv
+COCOTB_TOPLEVEL = Extend
+COCOTB_TEST_MODULES = Extend
 
 include $(shell cocotb-config --makefiles)/Makefile.sim

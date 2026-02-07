@@ -1,6 +1,8 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1769889667" />
-    <testcase name="ram_test" classname="ram" file="/Users/DanielPinto/Desktop/Engineering_and_Professional/Build_Projects/AMP/test/temp/ram.py" lineno="6" time="0.0032770633697509766" sim_time_ns="21.1" ratio_time="6438.691480538378" />
+    <property name="random_seed" value="1769906058" />
+    <testcase name="Extend_test" classname="Extend" file="/Users/DanielPinto/Desktop/Engineering_and_Professional/Build_Projects/AMP/test/temp/Extend.py" lineno="8" time="0.0015490055084228516" sim_time_ns="0.5" ratio_time="322.787748191473">
+      <failure error_type="AssertionError" error_msg="None&#10;assert LogicArray('11111111111100000000000000000000', Range(31, 'downto', 0)) == 4294967295&#10; +  where LogicArray('11111111111100000000000000000000', Range(31, 'downto', 0)) = LogicArrayObject(Extend.ImmExt).value&#10; +    where LogicArrayObject(Extend.ImmExt) = HierarchyObject(Extend).ImmExt" />
+    </testcase>
   </testsuite>
 </testsuites>
