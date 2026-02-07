@@ -29,8 +29,11 @@ state_t state, next_state;
 
 /*registers*/
 always_ff @(posedge clk) begin
-if (reset) state = RESET;
+if (reset)
+    state = RESET;
 else 
+    state <= next_state; 
+
 end
 
 /*compute next state based on current + opcodes*/
