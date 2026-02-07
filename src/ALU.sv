@@ -1,3 +1,5 @@
+import alu_defs::*
+
 `timescale 1ns/1ns
 
 module ALU ( 
@@ -19,8 +21,8 @@ module ALU (
     // 9 - AND
     always_comb begin
         case(ALUctrl)
-            0: ALUout = a + b;
-            1: ALUout = a - b;
+            OP_ADD: ALUout = a + b;
+            OP_SUB: ALUout = a - b;
             2: ALUout = a << b[4:0];
             3: ALUout = a >>> b[4:0];
             4: ALUout = a >> b[4:0];
