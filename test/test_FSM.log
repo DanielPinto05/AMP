@@ -1,0 +1,4 @@
+2026-02-07 16:09:03,712 - INFO - Starting test_FSM
+2026-02-07 16:09:03,713 - INFO - cycle 1: IRWrite = 0
+2026-02-07 16:09:03,713 - INFO - cycle 2: IRWrite = 1
+2026-02-07 16:09:03,714 - INFO - Finished the null test.

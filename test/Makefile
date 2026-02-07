@@ -1,7 +1,11 @@
 SIM ?= icarus
-COCOTB_TOPLEVEL ?= verilog
-VERILOG_SOURCES += $(PWD)/../../src/Extend.sv
-COCOTB_TOPLEVEL = Extend
-COCOTB_TEST_MODULES = Extend
+
+VERILOG_SOURCES += \
+	$(PWD)/../src/alu_defs.sv \
+	$(PWD)/../src/FSM.sv
+
+COCOTB_TOPLEVEL = FSM
+COCOTB_TEST_MODULES = test_FSM
+
 
 include $(shell cocotb-config --makefiles)/Makefile.sim
