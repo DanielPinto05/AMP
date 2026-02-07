@@ -23,14 +23,14 @@ module ALU (
         case(ALUctrl)
             OP_ADD: ALUout = a + b;
             OP_SUB: ALUout = a - b;
-            2: ALUout = a << b[4:0];
-            3: ALUout = a >>> b[4:0];
-            4: ALUout = a >> b[4:0];
-            5: ALUout = a | b;
-            6: ALUout = a ^ b;
-            7: ALUout = ($signed(a) < $signed(b)) ? 1 : 0;
-            8: ALUout = (a < b) ? 1 : 0;
-            9: ALUout = a & b;
+            OP_SLL: ALUout = a << b[4:0];
+            OP_SRA: ALUout = a >>> b[4:0];
+            OP_SRL: ALUout = a >> b[4:0];
+            OP_OR: ALUout = a | b;
+            OP_XOR: ALUout = a ^ b;
+            OP_SSLT: ALUout = ($signed(a) < $signed(b)) ? 1 : 0;
+            OP_USLT: ALUout = (a < b) ? 1 : 0;
+            OP_AND: ALUout = a & b;
             default: ALUout = 0;
         endcase
     end
