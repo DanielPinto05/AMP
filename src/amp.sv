@@ -25,7 +25,7 @@ module amp (input logic clk,
     );
 
     logic [31:0] Adr;
-    2to1mux pc_2to1_mux(
+    two_one_mux pc_2to1_mux(
         .mx(AdrSrc),
         .a(PCout),
         .b(Result),
@@ -114,7 +114,7 @@ module amp (input logic clk,
 
     // Src A Mux
     logic [31:0] SrcA;
-    4to1mux srcb_mux(
+    four_one_mux srcb_mux(
         .mx(AlUSrcA),
         .a(PCout),
         .b(OldPC),
@@ -125,7 +125,7 @@ module amp (input logic clk,
 
     // Src B Mux
     logic [31:0] SrcB;
-    4to1mux srcb_mux(
+    four_one_mux srcb_mux(
         .mx(ALUSrcB),
         .a(WriteData),
         .b(ImmExt),
@@ -154,7 +154,7 @@ module amp (input logic clk,
         .out(ALUOut)
     );
 
-    4to1mux result_mux (
+    four_one_mux result_mux (
         .mx(ResultSrc)
         .a(ALUOut)
         .b(Data)
