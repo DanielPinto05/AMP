@@ -1,7 +1,4 @@
 import alu_defs::*
-
-`timescale 1ns/1ns
-
 module ALU ( 
     input logic [31:0] a, 
     input logic [31:0] b, 

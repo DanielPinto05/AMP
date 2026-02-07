@@ -1,4 +1,4 @@
-module 2to1mux (
+module two_one_mux (
     input logic mx,
     input logic [31:0] a,
     input logic [31:0] b,
@@ -13,7 +13,7 @@ module 2to1mux (
     end
 endmodule
 
-module 4to1mux (
+module four_one_mux (
     input logic [1:0] mx,
     input logic [31:0] a,
     input logic [31:0] b,
