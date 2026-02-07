@@ -6,13 +6,23 @@ module amp (input logic clk,
     // PC register
     logic [31:0] PCNext;
     logic [31:0] PCout;
-    register pc(
+    logic [31:0] OldPC;
+    
+    register pc_instance(
         .clk(clk), 
         .reset(reset), 
         .enable(PCwrite),
         .in(PCNext),
         .out(PCout)
-    )
+    );
+
+    register old_pc_instance(
+        .clk(clk), 
+        .reset(reset), 
+        .enable(1),
+        .in(PCout),
+        .out(OldPC)
+    );
 
     logic [31:0] Adr;
     2to1mux pc_2to1_mux(
@@ -24,11 +34,49 @@ module amp (input logic clk,
     
     // Instruction Memory
     logic [31:0] Instr;
-    ram IMEM() // instruction memory - this is read only
+    logic [31:0] intructData;
 
+     ram #(
+        .DEPTH(1024),
+        .WIDTH(32)
+    ) IMEM (
+        .clk(clk),
+        .write_enable(0), 
+        .data_in(0),
+        .addr(Adr[11:2]),
+        .data_out(intructData)
+    );
+
+    register instruction_register(
+        .clk(clk), 
+        .reset(reset), 
+        .enable(IRWrite),
+        .in(ReadData),
+        .out(Instr)
+    );
 
     // Data Memory
-    ram DMEM() // data memory
+    logic [32:0] ReadData;
+    logic [32:0] Data;
+      ram #(
+        .DEPTH(1024),
+        .WIDTH(32)
+    ) DMEM (
+        .clk(clk),
+        .write_enable(MemWrite),
+        .data_in(WriteData),
+        .addr(Adr[11:2]),
+        .data_out(ReadData)
+    );
+
+    register memory_register(
+        .clk(clk), 
+        .reset(reset), 
+        .enable(1),
+        .in(ReadData),
+        .out(Data)
+    );
+
 
     // Register File
     logic [31:0] rd1;
@@ -66,9 +114,25 @@ module amp (input logic clk,
 
     // Src A Mux
     logic [31:0] SrcA;
+    4to1mux srcb_mux(
+        .mx(AlUSrcA),
+        .a(PCout),
+        .b(OldPC),
+        .c(A),
+        .d(0),
+        .out(SrcA)
+    );
 
     // Src B Mux
     logic [31:0] SrcB;
+    4to1mux srcb_mux(
+        .mx(ALUSrcB),
+        .a(WriteData),
+        .b(ImmExt),
+        .c(4),
+        .d(0),
+        .out(SrcB)
+    );
 
     // ALU
     logic [31:0] ALUResult;
@@ -111,9 +175,29 @@ module amp (input logic clk,
     logic [1:0] ImmSrc;
     logic RegWrite;
 
-    FSM fsm_instance(
-        
+    FSM fsm_instance (
+        .op(Instr[6:0]),
+        .funct7_5(Instr[30]),
+        .funct3(Instr[14:12]),
+        .reset(reset).
+        .PCWrite(PCwrite),
+        .AdrSrc(AdrSrc),
+        .MemWrite(MemWrite),
+        .IRWrite(IRWrite),
+        .ResultSrc(ResultSrc),
+        .ALUControl(ALUControl),
+        .ALUSrcB(ALUSrcB),
+        .AlUSrcA(AlUSrcA),
+        .ImmSrc(ImmSrc),
+        .RegWrite(RegWrite)
+    );
 
-    )
+    // Extend 
+    logic [31:0] ImmExt;
+    Extend extend_instance (
+        .ImmSrc(ImmSrc),
+        .instr(instr[31:7]),
+        .ImmExt(ImmExt)
+    );
 
 endmodule
