@@ -11,7 +11,7 @@ module register_file(
     output logic [31:0] rd2
 );
     logic [31:0] r_out [31:0]; // Register Array
-    logic [31:0] we;
+    logic [31:0] we; 
 
     genvar k;
     generate 
