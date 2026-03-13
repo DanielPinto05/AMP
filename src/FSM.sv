@@ -75,31 +75,70 @@ end
 
 always_comb begin
 case(state)
-RESET: 
-    PCWrite = 0; 
-    AdrSrc = 0; 
-    MemWrite = 0; 
-    IRWrite = 0; //* ready to receive data from mem
-    ResultSrc = X; 
-    ALUControl = X; 
-    ALUSrcA = X; 
-    ALUSrcB = X; 
-    ImmSrc = X; 
-    RegWrite = 0; 
+    RESET: 
+        PCWrite = 0; 
+        AdrSrc = 0; 
+        MemWrite = 0; 
+        IRWrite = 0; //* ready to receive data from mem
+        ResultSrc = X; 
+        ALUSrcA = X; 
+        ALUSrcB = X; 
+        ImmSrc = X; 
+        RegWrite = 0; 
 
-FETCH:
-    PCWrite = 0; 
-    AdrSrc = 0; 
-    MemWrite = 0; 
-    IRWrite = 1; //* ready to receive data from mem
-    ResultSrc = X; 
-    ALUControl = X; 
-    ALUSrcA = X; 
-    ALUSrcB = X; 
-    ImmSrc = X; 
-    RegWrite = 0; 
-DECODE:
+    FETCH:
+        PCWrite = 0; 
+        AdrSrc = 0; 
+        MemWrite = 0; 
+        IRWrite = 1; //* ready to receive data from mem
+        ResultSrc = X; 
+        ALUSrcA = X; 
+        ALUSrcB = X; 
+        ImmSrc = X; 
+        RegWrite = 0; 
 
+    DECODE:
+        PCWrite = 0; 
+        AdrSrc = 0; 
+        MemWrite = 0; 
+        IRWrite = 0; //* ready to receive data from mem
+        ResultSrc = X; 
+        ALUSrcA = X; 
+        ALUSrcB = X; 
+        ImmSrc = X; 
+        RegWrite = 0; 
+
+    EXECUTEI:
+        PCWrite = 0; 
+        AdrSrc = 0; 
+        MemWrite = 0; 
+        IRWrite = 1; //* ready to receive data from mem
+        ResultSrc = X; 
+        ALUSrcA = X; 
+        ALUSrcB = X; 
+        ImmSrc = X; 
+        RegWrite = 0; 
+
+    EXECUTER:
+        PCWrite = 0; 
+        AdrSrc = 0; 
+        MemWrite = 0; 
+        IRWrite = 1; //* ready to receive data from mem
+        ResultSrc = X; 
+        ALUSrcA = 2'b10; 
+        ALUSrcB = 2'b00; 
+        ImmSrc = X; 
+        RegWrite = 0; 
+    ALUWB:
+        PCWrite = 0; 
+        AdrSrc = 0; 
+        MemWrite = 0; 
+        IRWrite = 1; //* ready to receive data from mem
+        ResultSrc = 2'b10; 
+        ALUSrcA = X; 
+        ALUSrcB = X; 
+        ImmSrc = X; 
+        RegWrite = 1; 
 endcase
 end
 
@@ -111,40 +150,40 @@ always_comb begin
         7'b0110011: begin // R-type
             case (funct3)
                 3'b000: ALUControl = funct7_5 ? ALU_SUB : ALU_ADD;
-                // 3'b111: ALUControl = ALU_AND;
-                // 3'b110: ALUControl = ALU_OR;
-                // 3'b100: ALUControl = ALU_XOR;
-                // 3'b001: ALUControl = ALU_SLL;
-                // 3'b101: ALUControl = funct7_5 ? ALU_SRA : ALU_SRL;
-                // 3'b010: ALUControl = ALU_SLT;
-                // 3'b011: ALUControl = ALU_SLTU;
+                3'b111: ALUControl = ALU_AND;
+                3'b110: ALUControl = ALU_OR;
+                3'b100: ALUControl = ALU_XOR;
+                3'b001: ALUControl = ALU_SLL;
+                3'b101: ALUControl = funct7_5 ? ALU_SRA : ALU_SRL;
+                3'b010: ALUControl = ALU_SSLT;
+                3'b011: ALUControl = ALU_USLT;
                 default: ALUControl = ALU_ADD;
             endcase
         end
 
-        7'b0010011: begin // I-type ALU
-            case (funct3)
-                3'b000: ALUControl = ALU_ADD; // addi
-                3'b111: ALUControl = ALU_AND; // andi
-                3'b110: ALUControl = ALU_OR;  // ori
-                3'b100: ALUControl = ALU_XOR; // xori
-                3'b001: ALUControl = ALU_SLL; // slli
-                3'b101: ALUControl = funct7_5 ? ALU_SRA : ALU_SRL; // srai/srli
-                3'b010: ALUControl = ALU_SLT;  // slti
-                3'b011: ALUControl = ALU_SLTU; // sltiu
-                default: ALUControl = ALU_ADD;
-            endcase
-        end
+        // 7'b0010011: begin // I-type ALU
+        //     case (funct3)
+        //         3'b000: ALUControl = ALU_ADD; // addi
+        //         3'b111: ALUControl = ALU_AND; // andi
+        //         3'b110: ALUControl = ALU_OR;  // ori
+        //         3'b100: ALUControl = ALU_XOR; // xori
+        //         3'b001: ALUControl = ALU_SLL; // slli
+        //         3'b101: ALUControl = funct7_5 ? ALU_SRA : ALU_SRL; // srai/srli
+        //         3'b010: ALUControl = ALU_SLT;  // slti
+        //         3'b011: ALUControl = ALU_SLTU; // sltiu
+        //         default: ALUControl = ALU_ADD;
+        //     endcase
+        // end
 
-        7'b0000011, // loads
-        7'b0100011, // stores
-        7'b1100111: // jalr
-            ALUControl = ALU_ADD; // address calc = base + imm
+        // 7'b0000011, // loads
+        // 7'b0100011, // stores
+        // 7'b1100111: // jalr
+        //     ALUControl = ALU_ADD; // address calc = base + imm
 
-        7'b1100011: begin // branches
-            // often you do SUB/compare here depending on datapath
-            ALUControl = ALU_SUB;
-        end
+        // 7'b1100011: begin // branches
+        //     // often you do SUB/compare here depending on datapath
+        //     ALUControl = ALU_SUB;
+        // end
 
         default: ALUControl = ALU_ADD;
     endcase
