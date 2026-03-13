@@ -1,4 +1,5 @@
 import alu_defs::*; 
+
 module alu ( 
     input logic [31:0] a, 
     input logic [31:0] b, 
@@ -21,7 +22,7 @@ module alu (
             OP_ADD: ALUout = a + b;
             OP_SUB: ALUout = a - b;
             OP_SLL: ALUout = a << b[4:0];
-            OP_SRA: ALUout = a >>> b[4:0];
+            OP_SRA: ALUout = $signed(a) >>> b[4:0];
             OP_SRL: ALUout = a >> b[4:0];
             OP_OR: ALUout = a | b;
             OP_XOR: ALUout = a ^ b;
