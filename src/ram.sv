@@ -5,9 +5,9 @@ module ram #( // 1k x 4B ram block
 (
     input clk, 
     input logic write_enable, 
-    input logic [WIDTH-1:0]data_in,
-    input logic [$clog2(DEPTH)-1:0]addr, // so for 1024, it's addr[9:0]
-    output logic [WIDTH-1:0]data_out
+    input logic [WIDTH-1:0] data_in,
+    input logic [$clog2(DEPTH)-1:0] addr, // so for 1024, it's addr[9:0]
+    output logic [WIDTH-1:0] data_out
 );
 
 logic [WIDTH-1:0] mem [0:DEPTH-1];
