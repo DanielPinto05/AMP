@@ -1,19 +1,20 @@
 import alu_defs::*; // imports all parameters from alu_defs.sv
 
 module FSM(
-    input logic op[6:0], 
-    input logic funct7_5,
-    input logic funct3[2:0],
+    input logic clk,
+    input logic [6:0] op,  // operation
+    input logic funct7_5, // 
+    input logic [2:0] funct3,
     input logic reset, 
     output logic PCWrite, 
     output logic AdrSrc, //mux signal
     output logic MemWrite,
     output logic IRWrite, 
-    output logic ResultSrc[1:0], // takes output of ALUout reg
-    output logic ALUControl[3:0], 
-    output logic ALUSrcA[1:0],
-    output logic ALUSrcB[1:0],
-    output logic ImmSrc[1:0],
+    output logic [1:0] ResultSrc, // takes output of ALUout reg
+    output logic [3:0]ALUControl, 
+    output logic [1:0] ALUSrcA,
+    output logic [1:0] ALUSrcB,
+    output logic [1:0] ImmSrc,
     output logic RegWrite,
 );
 
@@ -23,9 +24,6 @@ typedef enum logic[3:0] {
 } state_t; 
 
 state_t state, next_state; 
-
-
-
 
 /*registers*/
 always_ff @(posedge clk) begin
@@ -44,15 +42,15 @@ always_comb begin
         RESET: next_state = FETCH; 
         FETCH: next_state = DECODE; 
         DECODE: 
-            begin unique casez(op)
+            begin unique casez(op) //  QUES: Why use casez?
                 3: next_state = MEMADR; //lw
                 35: next_state = MEMADR; //sw
-                default: next_state = RESET;
                 51: next_state = EXECUTER; //R-type
                 19: next_state = EXECUTEI; //I-tpye
                 99: next_state = BRANCH; 
                 111: next_state = JAL; 
                 23: next_state = LUI; 
+                default: next_state = RESET;
             endcase
             end
         MEMADR: begin
@@ -75,7 +73,6 @@ always_comb begin
 end
 
 
-
 always_comb begin
 case(state)
 RESET: 
@@ -90,7 +87,6 @@ RESET:
     ImmSrc = X; 
     RegWrite = 0; 
 
-
 FETCH:
     PCWrite = 0; 
     AdrSrc = 0; 
@@ -102,9 +98,56 @@ FETCH:
     ALUSrcB = X; 
     ImmSrc = X; 
     RegWrite = 0; 
+DECODE:
+
 endcase
 end
 
+// AlU control
+always_comb begin
+    ALUControl = ALU_ADD; // default
 
+    case (op)
+        7'b0110011: begin // R-type
+            case (funct3)
+                3'b000: ALUControl = funct7_5 ? ALU_SUB : ALU_ADD;
+                // 3'b111: ALUControl = ALU_AND;
+                // 3'b110: ALUControl = ALU_OR;
+                // 3'b100: ALUControl = ALU_XOR;
+                // 3'b001: ALUControl = ALU_SLL;
+                // 3'b101: ALUControl = funct7_5 ? ALU_SRA : ALU_SRL;
+                // 3'b010: ALUControl = ALU_SLT;
+                // 3'b011: ALUControl = ALU_SLTU;
+                default: ALUControl = ALU_ADD;
+            endcase
+        end
+
+        7'b0010011: begin // I-type ALU
+            case (funct3)
+                3'b000: ALUControl = ALU_ADD; // addi
+                3'b111: ALUControl = ALU_AND; // andi
+                3'b110: ALUControl = ALU_OR;  // ori
+                3'b100: ALUControl = ALU_XOR; // xori
+                3'b001: ALUControl = ALU_SLL; // slli
+                3'b101: ALUControl = funct7_5 ? ALU_SRA : ALU_SRL; // srai/srli
+                3'b010: ALUControl = ALU_SLT;  // slti
+                3'b011: ALUControl = ALU_SLTU; // sltiu
+                default: ALUControl = ALU_ADD;
+            endcase
+        end
+
+        7'b0000011, // loads
+        7'b0100011, // stores
+        7'b1100111: // jalr
+            ALUControl = ALU_ADD; // address calc = base + imm
+
+        7'b1100011: begin // branches
+            // often you do SUB/compare here depending on datapath
+            ALUControl = ALU_SUB;
+        end
+
+        default: ALUControl = ALU_ADD;
+    endcase
+end
 
 endmodule

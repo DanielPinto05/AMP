@@ -176,6 +176,7 @@ module amp (input logic clk,
     logic RegWrite;
 
     FSM fsm_instance (
+        .clk(clk),
         .op(Instr[6:0]),
         .funct7_5(Instr[30]),
         .funct3(Instr[14:12]),

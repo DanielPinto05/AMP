@@ -86,4 +86,4 @@ async def mux_test(dut):
         )
 
 
-    logger.info("All mux tests passed ✅")
+    logger.info("All mux tests passed!")
