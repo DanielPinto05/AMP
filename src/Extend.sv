@@ -1,4 +1,4 @@
-module Extend( // extend immediates to 32-bits depending on what ImmSrc gives you
+module extend( // extend immediates to 32-bits depending on what ImmSrc gives you
     input logic [2:0] ImmSrc, 
     input logic [31:7] instr, // the actual instruction from IR
     output logic [31:0] ImmExt

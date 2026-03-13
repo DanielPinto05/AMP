@@ -1,7 +1,8 @@
 SIM ?= icarus
 
-VERILOG_SOURCES += $(PWD)/../src/mux.sv
-COCOTB_TOPLEVEL = two_one_mux
-COCOTB_TEST_MODULES = test_mux
+# VERILOG_SOURCES += $(PWD)/../src/*alu_defs.sv
+VERILOG_SOURCES += $(PWD)/../src/extend.sv
+COCOTB_TOPLEVEL = extend
+COCOTB_TEST_MODULES = test_extend
 
 include $(shell cocotb-config --makefiles)/Makefile.sim

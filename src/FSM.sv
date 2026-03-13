@@ -15,7 +15,7 @@ module FSM(
     output logic [1:0] ALUSrcA,
     output logic [1:0] ALUSrcB,
     output logic [1:0] ImmSrc,
-    output logic RegWrite,
+    output logic RegWrite
 );
 
 // defines the state_t type and what values it can take on.
@@ -75,7 +75,7 @@ end
 
 always_comb begin
 case(state)
-    RESET: 
+    RESET: begin
         PCWrite = 0; 
         AdrSrc = 0; 
         MemWrite = 0; 
@@ -85,8 +85,8 @@ case(state)
         ALUSrcB = X; 
         ImmSrc = X; 
         RegWrite = 0; 
-
-    FETCH:
+    end
+    FETCH: begin
         PCWrite = 0; 
         AdrSrc = 0; 
         MemWrite = 0; 
@@ -96,8 +96,8 @@ case(state)
         ALUSrcB = X; 
         ImmSrc = X; 
         RegWrite = 0; 
-
-    DECODE:
+    end
+    DECODE: begin
         PCWrite = 0; 
         AdrSrc = 0; 
         MemWrite = 0; 
@@ -107,8 +107,8 @@ case(state)
         ALUSrcB = X; 
         ImmSrc = X; 
         RegWrite = 0; 
-
-    EXECUTEI:
+    end
+    EXECUTEI: begin
         PCWrite = 0; 
         AdrSrc = 0; 
         MemWrite = 0; 
@@ -118,8 +118,8 @@ case(state)
         ALUSrcB = X; 
         ImmSrc = X; 
         RegWrite = 0; 
-
-    EXECUTER:
+    end
+    EXECUTER: begin 
         PCWrite = 0; 
         AdrSrc = 0; 
         MemWrite = 0; 
@@ -129,7 +129,8 @@ case(state)
         ALUSrcB = 2'b00; 
         ImmSrc = X; 
         RegWrite = 0; 
-    ALUWB:
+    end
+    ALUWB: begin
         PCWrite = 0; 
         AdrSrc = 0; 
         MemWrite = 0; 
@@ -139,6 +140,7 @@ case(state)
         ALUSrcB = X; 
         ImmSrc = X; 
         RegWrite = 1; 
+    end
 endcase
 end
 

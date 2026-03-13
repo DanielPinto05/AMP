@@ -1,17 +1,20 @@
 module amp (input logic clk, 
+            input logic [31:0] pc_input,
             input logic reset,
             output logic [31:0] result); 
     // top-level module
    
     // PC register
     logic [31:0] PCNext;
+    assign PCNext = pc_input; // temp   
     logic [31:0] PCout;
     logic [31:0] OldPC;
+    logic PCwrite; 
     
     register pc_instance(
         .clk(clk), 
         .reset(reset), 
-        .enable(PCwrite),
+        .RegWrite(PCwrite),
         .in(PCNext),
         .out(PCout)
     );
@@ -19,12 +22,13 @@ module amp (input logic clk,
     register old_pc_instance(
         .clk(clk), 
         .reset(reset), 
-        .enable(1),
+        .RegWrite(1),
         .in(PCout),
         .out(OldPC)
     );
 
     logic [31:0] Adr;
+    logic AdrSrc;
     two_one_mux pc_2to1_mux(
         .mx(AdrSrc),
         .a(PCout),
@@ -56,8 +60,8 @@ module amp (input logic clk,
     );
 
     // Data Memory
-    logic [32:0] ReadData;
-    logic [32:0] Data;
+    logic [31:0] ReadData;
+    logic [31:0] Data;
       ram #(
         .DEPTH(1024),
         .WIDTH(32)
@@ -90,10 +94,10 @@ module amp (input logic clk,
         .RegWrite(RegWrite),
         .rs1(Instr[19:15]),
         .rs2(Instr[24:20]),
-        .rd(Instr{11:7}),
+        .rd(Instr[11:7]),
         .wd(Result),
         .rd1(rd1),
-        .rd2(rd2),
+        .rd2(rd2)
     );  
 
     register rd1_register(
@@ -102,19 +106,19 @@ module amp (input logic clk,
         .enable(1'b1),
         .in(rd1),
         .out(A)
-    )
+    );
 
-     register rd2_register(
+    register rd2_register(
         .clk(clk), 
         .reset(reset), 
         .enable(1'b1),
         .in(rd2),
         .out(WriteData)
-    )
+    );
 
     // Src A Mux
     logic [31:0] SrcA;
-    four_one_mux srcb_mux(
+    four_one_mux srca_mux(
         .mx(AlUSrcA),
         .a(PCout),
         .b(OldPC),
@@ -136,7 +140,7 @@ module amp (input logic clk,
 
     // ALU
     logic [31:0] ALUResult;
-    ALU alu_instance(
+    alu alu_instance(
         .a(SrcA),
         .b(SrcB),
         .ALUctrl(ALUControl),
@@ -155,17 +159,15 @@ module amp (input logic clk,
     );
 
     four_one_mux result_mux (
-        .mx(ResultSrc)
-        .a(ALUOut)
-        .b(Data)
-        .c(ALUResult)
-        .d(32'd0)
+        .mx(ResultSrc),
+        .a(ALUOut),
+        .b(Data),
+        .c(ALUResult),
+        .d(32'd0),
         .out(Result)
     );
 
     // Control Unit FSM
-    logic PCwrite; 
-    logic AdrSrc;
     logic MemWrite;
     logic IRWrite;
     logic [1:0] ResultSrc;
@@ -180,7 +182,7 @@ module amp (input logic clk,
         .op(Instr[6:0]),
         .funct7_5(Instr[30]),
         .funct3(Instr[14:12]),
-        .reset(reset).
+        .reset(reset),
         .PCWrite(PCwrite),
         .AdrSrc(AdrSrc),
         .MemWrite(MemWrite),
@@ -197,8 +199,10 @@ module amp (input logic clk,
     logic [31:0] ImmExt;
     Extend extend_instance (
         .ImmSrc(ImmSrc),
-        .instr(instr[31:7]),
+        .instr(Instr[31:7]),
         .ImmExt(ImmExt)
     );
+
+    assign result = Result;
 
 endmodule
